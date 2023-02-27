@@ -11,14 +11,10 @@ export class App extends Component {
     bad: 0,
   };
 
-  handleFeedback = evt => {
-    if (evt === 'Good') {
-      this.setState({ good: this.state.good + 1 });
-    } else if (evt === 'Neutral') {
-      this.setState({ neutral: this.state.neutral + 1 });
-    } else if (evt === 'Bad') {
-      this.setState({ bad: this.state.bad + 1 });
-    }
+  handleFeedback = option => {
+    this.setState(prevState => {
+      return { [option]: prevState[option] + 1 };
+    });
   };
 
   totalFeedback = () => {
@@ -34,6 +30,7 @@ export class App extends Component {
   };
 
   render() {
+    const { good, neutral, bad } = this.state;
     return (
       <div
         style={{
@@ -48,7 +45,7 @@ export class App extends Component {
       >
         <Section title="Please leave feedback">
           <FeedbackOptions
-            options={['Good', 'Neutral', 'Bad']}
+            options={Object.keys(this.state)}
             onLeaveFeedback={this.handleFeedback}
           />{' '}
         </Section>
@@ -56,9 +53,9 @@ export class App extends Component {
         <Section title="Statistics">
           {this.totalFeedback() !== 0 ? (
             <Statistics
-              good={this.state.good}
-              neutral={this.state.neutral}
-              bad={this.state.bad}
+              good={good}
+              neutral={neutral}
+              bad={bad}
               total={this.totalFeedback()}
               positivePercentage={this.positivePercentage()}
             />
